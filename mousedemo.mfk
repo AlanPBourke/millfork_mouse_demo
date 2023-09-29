@@ -13,9 +13,9 @@ void main() {
     ubyte spr_data_pointer  @$7f8   // Sprite 0 data location pointer
 
     // Clear the top part of the default text screen 
-	for i, 0, paralleluntil, 250 {
-		screen[000+i] = 32
-	}
+    for i, 0, paralleluntil, 250 {
+        screen[000+i] = 32
+    }
 
     spr_data_pointer = $c0          // Sprite 0 data at $3000
 
@@ -28,8 +28,8 @@ void main() {
     // Raster interrupt at top of screen will read mouse position.
     vic_rasterirq_configure(MainRaster.addr, $00)
 
-	while true
-	{
+    while true
+    {
         // Display positional information.
         putchar(19)
         putstrz("mouse driver y: "z)
@@ -63,7 +63,7 @@ void main() {
 
         // Constrain x coord to visible screen
         if spr_x < 24 {
-           spr_x = 24 
+            spr_x = 24 
         }
 
         putstrz("sprite 0 x: "z) 
@@ -76,7 +76,7 @@ void main() {
         vic_spr0_y = spr_y
         vic_spr0_x = spr_x
 
-	}
+    }
 
 }
 
