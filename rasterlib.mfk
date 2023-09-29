@@ -1,3 +1,7 @@
+// This code is taken from a pull request by pmprog in 2021 which doesn't appear
+// to have been merged into the main Millfork branch.
+// https://github.com/KarolS/millfork/pull/108
+
 asm void vic_rasterirq_configure(pointer CallbackFunction, byte RasterLine)
 {
     sei

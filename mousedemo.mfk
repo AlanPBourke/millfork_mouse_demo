@@ -4,7 +4,7 @@ import rasterlib
 
 void main() {
 
-    const array spriteshape @$3000 = file("mouse.bin")
+    const array spriteshape @$3000 = file("mouse_sprite.bin")
     const pointer screen = $0400
 
     ubyte i
@@ -22,8 +22,7 @@ void main() {
     vic_bg_color0 = blue
     vic_border = light_blue
     vic_spr_ena = $ff               // All sprites on
-    //vic_spr_coord[0] = 100
-    //vic_spr_coord[1] = 100
+
     disable_irq()                   // CIA interrupts off
 
     // Raster interrupt at top of screen will read mouse position.
