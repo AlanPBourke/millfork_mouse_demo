@@ -8,13 +8,13 @@ void main() {
     const pointer screen = $0400
 
     ubyte i
+
     bool x_over                     // Sprite x > 255 flag
     ubyte spr_x                     // Calculated sprite 0 x coord
     ubyte spr_y                     // Calculated sprite 0 y coord
     ubyte spr_data_pointer  @$7f8   // Sprite 0 data location pointer
 
     ensure_mixedcase()
-
 
     // Clear the top part of the default text screen 
     for i, 0, paralleluntil, 250 {
@@ -62,7 +62,7 @@ void main() {
         // back at zero.
         if mouse_x > 255 {
             vic_spr_hi_x = (vic_spr_hi_x & %11111110) | %00000001
-            spr_x = mouse_x.lo - 255
+            spr_x = mouse_x.lo - 255 - 1
             //spr_x = 0
             x_over = true
         }
@@ -71,9 +71,13 @@ void main() {
             x_over = false
         }
 
-        // Constrain x coord to visible screen (only if x < 255)
+        // Constrain x coord to visible screen (when x < 255)
         if (spr_x < 24) && (x_over == false) {
             spr_x = 24 
+        }
+
+        if (spr_x > 65) && (x_over == true) {
+            spr_x = 65
         }
 
         putstrz("Sprite 0 x: "z) 
@@ -100,9 +104,11 @@ void main() {
 }
 
 void MainRaster() {
-
+    
     vic_rasterirq_acknowledge()
+
     c1531_mouse()                   // Read the mouse position
+
     vic_raster_return()
 
 }
