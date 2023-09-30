@@ -8,9 +8,13 @@ void main() {
     const pointer screen = $0400
 
     ubyte i
+    bool x_over                     // Sprite x > 255 flag
     ubyte spr_x                     // Calculated sprite 0 x coord
     ubyte spr_y                     // Calculated sprite 0 y coord
     ubyte spr_data_pointer  @$7f8   // Sprite 0 data location pointer
+
+    ensure_mixedcase()
+
 
     // Clear the top part of the default text screen 
     for i, 0, paralleluntil, 250 {
@@ -19,8 +23,8 @@ void main() {
 
     spr_data_pointer = $c0          // Sprite 0 data at $3000
 
-    vic_bg_color0 = blue
-    vic_border = light_blue
+    vic_bg_color0 = black
+    vic_border = light_grey
     vic_spr_ena = $ff               // All sprites on
 
     disable_irq()                   // CIA interrupts off
@@ -31,12 +35,15 @@ void main() {
     while true
     {
         // Display positional information.
-        putchar(19)
-        putstrz("mouse driver y: "z)
-        putword(mouse_y)
-        new_line()
-        putstrz("mouse driver x: "z)
+        putchar(19)                     // Cursor home
+        putchar(159)                    // Cyan
+        putstrz("Mouse Driver x: "z)
         putword(mouse_x)
+        putchar(32)
+        new_line()      
+        putstrz("Mouse Driver y: "z)
+        putword(mouse_y)
+        putchar(32)
         new_line()
 
         // Mouse_x and mouse_y are the word-length positional values
@@ -56,22 +63,34 @@ void main() {
         if mouse_x > 255 {
             vic_spr_hi_x = (vic_spr_hi_x & %11111110) | %00000001
             spr_x = mouse_x.lo - 255
+            //spr_x = 0
+            x_over = true
         }
         else {
             vic_spr_hi_x = (vic_spr_hi_x & %11111110) | %00000000
+            x_over = false
         }
 
-        // Constrain x coord to visible screen
-        if spr_x < 24 {
+        // Constrain x coord to visible screen (only if x < 255)
+        if (spr_x < 24) && (x_over == false) {
             spr_x = 24 
         }
 
-        putstrz("sprite 0 x: "z) 
+        putstrz("Sprite 0 x: "z) 
         putword(0000 + spr_x)
-        putstrz(" "z) 
+        putchar(32)
+
+        if x_over == true {
+            putstrz("($D010 = %11111111)   "z) 
+        }
+        else {
+            putstrz("($D010 = %11111110)   "z) 
+        }
+        
         new_line()
-        putstrz("sprite 0 y: "z) 
+        putstrz("Sprite 0 y: "z) 
         putword(0000 + spr_y)
+        putchar(32)
 
         vic_spr0_y = spr_y
         vic_spr0_x = spr_x
