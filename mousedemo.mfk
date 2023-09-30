@@ -80,6 +80,9 @@ void main() {
             spr_x = 65
         }
 
+        vic_spr0_y = spr_y
+        vic_spr0_x = spr_x
+
         putstrz("Sprite 0 x: "z) 
         putword(0000 + spr_x)
         putchar(32)
@@ -95,9 +98,6 @@ void main() {
         putstrz("Sprite 0 y: "z) 
         putword(0000 + spr_y)
         putchar(32)
-
-        vic_spr0_y = spr_y
-        vic_spr0_x = spr_x
 
     }
 
